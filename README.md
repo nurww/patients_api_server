@@ -86,3 +86,37 @@ from app.models import Base
 
 target_metadata = Base.metadata
 ```
+
+# Category Sales Calculator
+
+## Usage
+
+### Navigate to the `category_sales_calculator` directory:
+```
+cd category_sales_calculator
+```
+
+### Place a JSON file with sales data in this directory. The file must adhere to the following format:
+```
+[
+  {
+    "id": 1,
+    "owner": "user2",
+    "price": 8647,
+    "category": "cat1"
+  },
+  ...
+]
+```
+### Run the calculator:
+```
+python category_sales_calculator.py
+```
+### The output will display the number of items and total sales per category:
+```
+Количество предметов по категориям:
+{'cat1': 333103, 'cat3': 333386, 'cat2': 333511}
+
+Общая сумма продаж по категориям:
+{'cat1': 1831348772, 'cat3': 1832844186, 'cat2': 1832867646}
+```
