@@ -3,34 +3,34 @@ from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends, HTTPException
 
-# Конфигурация JWT
-SECRET_KEY = "your_secret_key"  # Секретный ключ для подписания токенов
-ALGORITHM = "HS256"            # Алгоритм шифрования
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Время жизни токена (30 минут)
+# JWT Configuration
+SECRET_KEY = "your_secret_key"  # Secret key for signing tokens
+ALGORITHM = "HS256"            # Encryption algorithm
+ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Token lifetime (30 minutes)
 
-# Данные пользователей
+# User data
 fake_users_db = {
     "doctor": {"username": "doctor", "password": "pass", "role": "doctor"},
     "admin": {"username": "admin", "password": "pass", "role": "admin"}
 }
 
-# Проверка логина и пароля
+# Checking login and password
 def authenticate_user(username: str, password: str):
     user = fake_users_db.get(username)
     if user and user["password"] == password:
         return user
     return None
 
-# Генерация JWT-токена
+# Generate JWT token
 def create_access_token(data: dict):
     to_encode = data.copy()
     to_encode.update({"exp": datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-# Используем `OAuth2PasswordBearer` для извлечения токена из запроса
+# Using `OAuth2PasswordBearer` to extract the token from the request
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
-# Проверка токена и роли пользователя
+# Checking the token and user role
 def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

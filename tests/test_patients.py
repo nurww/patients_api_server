@@ -6,7 +6,7 @@ from datetime import date, datetime
 
 client = TestClient(app)
 
-# Создание тестовых данных
+# Create test cases
 def setup_test_data(db: Session):
     db.add_all([
         PatientDB(
@@ -25,24 +25,24 @@ def setup_test_data(db: Session):
     db.commit()
 
 def test_get_patients_success(test_db):
-    # Создаём тестовые данные
+    # Creating test data
     setup_test_data(test_db)
 
-    # Получаем токен
+    # Retrieve token
     login_response = client.post("/login", json={"username": "doctor", "password": "pass"})
     token = login_response.json()["access_token"]
 
-    # Запрашиваем список пациентов
+    # Requesting a list of patients
     response = client.get("/patients", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     assert len(response.json()) == 2
 
 def test_get_patients_access_denied(test_db):
-    # Получаем токен для пользователя без роли `doctor`
+    # Retrieve token for user without role `doctor`
     login_response = client.post("/login", json={"username": "admin", "password": "pass"})
     token = login_response.json()["access_token"]
 
-    # Пытаемся запросить список пациентов
+    # Trying to request a list of patients
     response = client.get("/patients", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 403
     assert response.json()["detail"] == "Access denied"

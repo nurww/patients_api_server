@@ -1,14 +1,14 @@
-# Используем официальный образ Python
+# Using the official Python image
 FROM python:3.11-slim
 
-# Устанавливаем рабочую директорию
+# Set the working directory
 WORKDIR /app
 
-# Копируем файлы проекта в контейнер
+# Copy the project files into the container
 COPY . .
 
-# Устанавливаем зависимости
+# Installing dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Указываем команду для запуска приложения
+# Specify the command to launch the application
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

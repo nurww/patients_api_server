@@ -3,6 +3,6 @@ from app.routes import login, patients
 
 app = FastAPI()
 
-# Подключение маршрутов
+# Connecting routes
 app.include_router(login.router)
 app.include_router(patients.router)
